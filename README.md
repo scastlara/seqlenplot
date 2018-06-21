@@ -29,6 +29,6 @@ Options:
 
 ### Example plots
 
-<img src="https://raw.githubusercontent.com/scastlara/seqlen/master/lencomparison.png" width=500/>
+<img src="https://raw.githubusercontent.com/scastlara/seqlen/master/example_plots/lencomparison.png" width=500/>
 
-<img src="https://raw.githubusercontent.com/scastlara/seqlen/master/bigger.png" width=500/>
+<img src="https://raw.githubusercontent.com/scastlara/seqlen/master/example_plots/bigger.png" width=500/>
