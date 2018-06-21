@@ -1,24 +1,8 @@
 #!/usr/bin/R
 library(ggplot2);
 library(scales);
+suppressPackageStartupMessages(library("optparse"));
 
-read_cmdlineargs <- function() {
-    arguments <- commandArgs(TRUE);
-    TRLEN     <- arguments[1];
-    PROTLEN   <- arguments[2];
-    OUTPUT    <- arguments[3];
-    XLAB      <- "Transcript Length (bp)";
-    YLAB      <- "Protein Length (codons)";
-    if (length(arguments) > 3) {
-        XLAB <- arguments[4];
-    }
-    if (length(arguments) > 4) {
-        YLAB <- arguments[5];
-    }
-    trlength  <- read.table(file=TRLEN,   header=T, comment.char = "");
-    protlength <- read.table(file=PROTLEN, header=T, comment.char = "");
-    return(list(trlength, protlength, OUTPUT, XLAB, YLAB));
-}
 
 merge_df <- function(trlength, protlength) {
     merged <- merge(trlength, protlength, by="Name");
@@ -82,8 +66,22 @@ seqplot <- function(df, mintotal, perc_position, breaks, xlab, ylab) {
 
 
 main <- function() {
-    cmd <- read_cmdlineargs();
-    df <- merge_df(cmd[1], cmd[2]);
+    parser <- OptionParser();
+    parser <- add_option(parser, c("-t", "--transcript"), type="character",
+                         help="File 1 with infoseq transcript sequence lengths.");
+    parser <- add_option(parser, c("-p", "--protein"), type="character",
+                         help="File 2 with infoseq protein sequence lengths.");
+    parser <- add_option(parser, c("-x", "--xlab"), type="character", default="Transcript Length (bp)",
+                         help="X label for plot. [default '%default']");
+    parser <- add_option(parser, c("-y", "--ylab"), type="character", default="Protein Length (codons)",
+                         help="Y label for plot. [default '%default']");
+    parser <- add_option(parser, c("-o", "--output"), type="character", 
+                         help="Output file for plot.");
+    opt <- parse_args(parser);
+
+    trlength  <- read.table(file=opt$transcript,   header=T, comment.char = "");
+    protlength <- read.table(file=opt$protein, header=T, comment.char = "");
+    df <- merge_df(trlength, protlength);
     breaks <- compute_breaks(df);
     perc_position <- compute_perc_position(df);
     mintotal <-compute_mintotal(df);
@@ -92,10 +90,10 @@ main <- function() {
         mintotal=mintotal, 
         perc_position=perc_position, 
         breaks=c(breaks),
-        xlab=cmd[4],
-        ylab=cmd[5]
+        xlab=opt$xlab,
+        ylab=opt$ylab
         );
-    ggsave(file=cmd[[3]], theplot);
+    ggsave(file=opt$output, theplot);
 }
 
 
