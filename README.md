@@ -1,10 +1,10 @@
-# seqlen
+# seqlenplot
 Script to print a comparison of protein and transcript length using two files from infoseq.
 
 ## Usage
 
 ```
-Usage: seqlen.R [options]
+Usage: seqlenplot.R [options]
 
 
 Options:
