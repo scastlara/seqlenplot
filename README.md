@@ -4,7 +4,7 @@ Script to print a comparison of protein and transcript length using two files fr
 ## Usage
 
 ```
-Rscript seqlen.R tr.infoseq.tbl prot.infoseq.tbl lencomparison.png
+Rscript seqlen.R tr.infoseq.tbl prot.infoseq.tbl lencomparison.png [XLAB] [YLAB]
 ```
 
 ### Example plots
