@@ -31,7 +31,7 @@ compute_mintotal <- function(df) {
     return(mintotal);
 }
 
-seqplot <- function(df, mintotal, perc_position, breaks, xlab, ylab) {
+do_seqlenplot <- function(df, mintotal, perc_position, breaks, xlab, ylab) {
     scatt <- ggplot(df, aes(x=TRANSCRIPT, y=PROTEIN)) +
              geom_point(alpha = 0.3, color="#F7B043") +
                 coord_fixed() +
@@ -64,6 +64,20 @@ seqplot <- function(df, mintotal, perc_position, breaks, xlab, ylab) {
     return(scatt);
 }
 
+seqlenplot <- function(df, xlab, ylab) {
+    breaks <- compute_breaks(df);
+    perc_position <- compute_perc_position(df);
+    mintotal <-compute_mintotal(df);
+    theplot <- do_seqlenplot(
+        df=df, 
+        mintotal=mintotal, 
+        perc_position=perc_position, 
+        breaks=c(breaks),
+        xlab=xlab,
+        ylab=ylab
+        );
+    return(theplot);
+}
 
 main <- function() {
     parser <- OptionParser();
@@ -82,17 +96,7 @@ main <- function() {
     trlength  <- read.table(file=opt$transcript,   header=T, comment.char = "");
     protlength <- read.table(file=opt$protein, header=T, comment.char = "");
     df <- merge_df(trlength, protlength);
-    breaks <- compute_breaks(df);
-    perc_position <- compute_perc_position(df);
-    mintotal <-compute_mintotal(df);
-    theplot <- seqplot(
-        df=df, 
-        mintotal=mintotal, 
-        perc_position=perc_position, 
-        breaks=c(breaks),
-        xlab=opt$xlab,
-        ylab=opt$ylab
-        );
+    theplot <- seqlenplot(df, opt$xlab, opt$ylab);
     ggsave(file=opt$output, theplot);
 }
 
