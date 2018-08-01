@@ -1,4 +1,4 @@
-#!/usr/bin/R
+#!/usr/bin/Rscript
 library(ggplot2);
 library(scales);
 suppressPackageStartupMessages(library("optparse"));
@@ -92,7 +92,12 @@ main <- function() {
     parser <- add_option(parser, c("-o", "--output"), type="character", 
                          help="Output file for plot.");
     opt <- parse_args(parser);
-
+    if (is.null(opt$transcript)) {
+        stop("Transcript file (-t) missing!\n");
+    }
+    if (is.null(opt$protein)) {
+        stop("Protein file (-p) missing!\n");
+    }
     trlength  <- read.table(file=opt$transcript,   header=T, comment.char = "");
     protlength <- read.table(file=opt$protein, header=T, comment.char = "");
     df <- merge_df(trlength, protlength);
